@@ -46,6 +46,7 @@ class App:
         self.win.title("Bookkeeping system")
         self.main_menu()
 
+
     def main_menu(self):
         for i in self.win.winfo_children():
             i.destroy()
@@ -61,13 +62,14 @@ class App:
         self.search_isbn_btn = tk.Button(self.main_frame, text="Search by ISBN", font=BUTTON_FONT, cursor="hand2")
         self.search_title_btn = tk.Button(self.main_frame, text="Search by author or title", font=BUTTON_FONT, cursor="hand2")
         self.add_book_btn = tk.Button(self.main_frame, text="Add a new book", font=BUTTON_FONT, command=self.add_book, cursor="hand2")
-        self.delete_book_btn = tk.Button(self.main_frame, text="Delete a book", font=BUTTON_FONT, cursor="hand2")
+        self.delete_book_btn = tk.Button(self.main_frame, text="Delete a book", font=BUTTON_FONT, command=self.delete_book, cursor="hand2")
 
         self.view_books_btn.grid(row=1, column=0, pady=20)
         self.search_isbn_btn.grid(row=2, column=0, pady=10)
         self.search_title_btn.grid(row=3, column=0, pady=10)
         self.add_book_btn.grid(row=4, column=0, pady=10)
         self.delete_book_btn.grid(row=5, column=0, pady=10)
+
 
     def view_books(self, page):
         for i in self.win.winfo_children():
@@ -123,7 +125,6 @@ class App:
             self.book_quantity.grid(row=i, column=3)
 
             i += 1
-
 
 
     def add_book(self):
@@ -183,6 +184,39 @@ class App:
         self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm)
         self.confirm.grid(row=6, column=0, columnspan=2, pady=20)
 
+
+    def delete_book(self):
+        for i in self.win.winfo_children():
+            i.destroy()
+
+        self.main_frame = tk.Frame(self.win)
+        self.main_frame.pack(anchor="center", pady=20)
+
+        self.go_back = tk.Button(self.main_frame, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2")
+        self.go_back.grid(row=0, column=0, columnspan=2, pady=30)
+
+        self.isbn = tk.Label(self.main_frame, text="ISBN", font=BUTTON_FONT)
+        self.isbn.grid(row=1, column=0, padx=10)
+        self.isbn_input = tk.Entry(self.main_frame, font=BUTTON_FONT)
+        self.isbn_input.grid(row=1, column=1, padx=10)
+
+        def confirm():
+            if self.isbn_input.get() == "":
+                messagebox.showerror("Error!", "Please enter an ISBN number")
+                return
+            
+            if self.isbn_input.get() not in books:
+                messagebox.showerror("Error!", "Book not found")
+                return
+            
+            del books[self.isbn_input.get()]
+            messagebox.showinfo("Success", "Book deleted successfully!")
+            self.delete_book()
+
+        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm)
+        self.confirm.grid(row=2, column=0, columnspan=2, pady=20)
+
+        
         
 
 TITLE_FONT = ("Arial", 24)
