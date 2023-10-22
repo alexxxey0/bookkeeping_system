@@ -302,6 +302,21 @@ class App:
         if page_switch:
             self.pages = math.ceil(len(self.matching_books) / 12)
             start, end = page * 12, page * 12 + 12 # Displaying 12 books per page
+            self.i = 4
+
+            # Table header
+            self.isbn = tk.Label(self.main_frame, text="ISBN", font=TABLE_HEADER_FONT)
+            self.title = tk.Label(self.main_frame, text="Title", font=TABLE_HEADER_FONT)
+            self.author = tk.Label(self.main_frame, text="Author", font=TABLE_HEADER_FONT)
+            self.quantity = tk.Label(self.main_frame, text="Quantity in stock", font=TABLE_HEADER_FONT)
+            self.price = tk.Label(self.main_frame, text="Price", font=TABLE_HEADER_FONT)
+
+            self.isbn.grid(row=3, column=0, padx=10)
+            self.title.grid(row=3, column=1, padx=10)
+            self.author.grid(row=3, column=2, padx=10)
+            self.quantity.grid(row=3, column=3, padx=10)
+            self.price.grid(row=3, column=4, padx=10)
+
             for book in itertools.islice(self.matching_books, start, end):
                     self.book_isbn = tk.Label(self.main_frame, text=book, font=TABLE_FONT)
                     self.book_title = tk.Label(self.main_frame, text=self.matching_books[book]["title"], font=TABLE_FONT)
@@ -456,7 +471,7 @@ books = {
     "978037453355341": {"title": "The Adventures of Sherlock Holmes", "author": "Arthur Conan Doyle", "price": 12.99, "quantity": 20}
 }
 
-for i in range(50):
+for i in range(1, 50):
     books[str(i)] = {"title": "lol", "author": "idk", "price": 2, "quantity": 4}
 
 
