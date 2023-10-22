@@ -59,8 +59,8 @@ class App:
 
         # Creating the main menu buttons
         self.view_books_btn = tk.Button(self.main_frame, text="View all available books", font=BUTTON_FONT, command=lambda: self.view_books(0), cursor="hand2")
-        self.search_isbn_btn = tk.Button(self.main_frame, text="Search by ISBN", font=BUTTON_FONT, cursor="hand2")
-        self.search_title_btn = tk.Button(self.main_frame, text="Search by author or title", font=BUTTON_FONT, cursor="hand2")
+        self.search_isbn_btn = tk.Button(self.main_frame, text="Search by ISBN", font=BUTTON_FONT, command=self.search_isbn, cursor="hand2")
+        self.search_title_btn = tk.Button(self.main_frame, text="Search by author or title", font=BUTTON_FONT, command=lambda: self.search_title(0), cursor="hand2")
         self.add_book_btn = tk.Button(self.main_frame, text="Add a new book", font=BUTTON_FONT, command=self.add_book, cursor="hand2")
         self.delete_book_btn = tk.Button(self.main_frame, text="Delete a book", font=BUTTON_FONT, command=self.delete_book, cursor="hand2")
 
@@ -86,11 +86,13 @@ class App:
         self.title = tk.Label(self.main_frame, text="Title", font=TABLE_HEADER_FONT)
         self.author = tk.Label(self.main_frame, text="Author", font=TABLE_HEADER_FONT)
         self.quantity = tk.Label(self.main_frame, text="Quantity in stock", font=TABLE_HEADER_FONT)
+        self.price = tk.Label(self.main_frame, text="Price", font=TABLE_HEADER_FONT)
 
         self.isbn.grid(row=1, column=0, padx=10)
         self.title.grid(row=1, column=1, padx=10)
         self.author.grid(row=1, column=2, padx=10)
         self.quantity.grid(row=1, column=3, padx=10)
+        self.price.grid(row=1, column=4, padx=10)
 
 
         # Page number and buttons for switching pages
@@ -118,11 +120,13 @@ class App:
             self.book_title = tk.Label(self.main_frame, text=books[book]["title"] if len(books[book]["title"]) < 30 else books[book]["title"][:27] + "...", font=TABLE_FONT)
             self.book_author = tk.Label(self.main_frame, text=books[book]["author"], font=TABLE_FONT)
             self.book_quantity = tk.Label(self.main_frame, text=books[book]["quantity"], font=TABLE_FONT)
+            self.book_price = tk.Label(self.main_frame, text=books[book]["price"], font=TABLE_FONT)
 
             self.book_isbn.grid(row=i, column=0)
             self.book_title.grid(row=i, column=1, padx=10)
             self.book_author.grid(row=i, column=2, padx=10)
             self.book_quantity.grid(row=i, column=3)
+            self.book_price.grid(row=i, column=4)
 
             i += 1
 
@@ -216,6 +220,190 @@ class App:
         self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm)
         self.confirm.grid(row=2, column=0, columnspan=2, pady=20)
 
+    def search_isbn(self):
+        for i in self.win.winfo_children():
+            i.destroy()
+
+        self.info_displayed = False
+        self.main_frame = tk.Frame(self.win)
+        self.main_frame.pack(anchor="center", pady=20)
+        self.input_frame = tk.Frame(self.main_frame)
+        self.input_frame.grid(row=1, column=0, columnspan=5)
+
+        self.go_back = tk.Button(self.main_frame, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2")
+        self.go_back.grid(row=0, column=0, columnspan=5, pady=30)
+
+        self.isbn = tk.Label(self.input_frame, text="ISBN", font=BUTTON_FONT)
+        self.isbn.grid(row=0, column=0, padx=10)
+        self.isbn_input = tk.Entry(self.input_frame, font=BUTTON_FONT)
+        self.isbn_input.grid(row=0, column=1, padx=10)
+
+        def confirm():
+            if self.isbn_input.get() == "":
+                messagebox.showerror("Error!", "Please enter an ISBN number")
+                return
+            
+            if self.isbn_input.get() not in books:
+                messagebox.showerror("Error!", "Book not found")
+                return
+            
+            # Erase the info about previous book
+            if self.info_displayed:
+                self.book_isbn.destroy()
+                self.book_title.destroy()
+                self.book_author.destroy()
+                self.book_quantity.destroy()
+                self.book_price.destroy()
+            
+            self.isbn = tk.Label(self.main_frame, text="ISBN", font=TABLE_HEADER_FONT)
+            self.title = tk.Label(self.main_frame, text="Title", font=TABLE_HEADER_FONT)
+            self.author = tk.Label(self.main_frame, text="Author", font=TABLE_HEADER_FONT)
+            self.quantity = tk.Label(self.main_frame, text="Quantity in stock", font=TABLE_HEADER_FONT)
+            self.price = tk.Label(self.main_frame, text="Price", font=TABLE_HEADER_FONT)
+            self.isbn.grid(row=3, column=0, padx=10)
+            self.title.grid(row=3, column=1, padx=10)
+            self.author.grid(row=3, column=2, padx=10)
+            self.quantity.grid(row=3, column=3, padx=10)
+            self.price.grid(row=3, column=4, padx=10)
+
+            self.book_isbn = tk.Label(self.main_frame, text=self.isbn_input.get(), font=TABLE_FONT)
+            self.book_title = tk.Label(self.main_frame, text=books[self.isbn_input.get()]["title"], font=TABLE_FONT)
+            self.book_author = tk.Label(self.main_frame, text=books[self.isbn_input.get()]["author"], font=TABLE_FONT)
+            self.book_quantity = tk.Label(self.main_frame, text=books[self.isbn_input.get()]["quantity"], font=TABLE_FONT)
+            self.book_price = tk.Label(self.main_frame, text=books[self.isbn_input.get()]["price"], font=TABLE_FONT)
+            self.book_isbn.grid(row=4, column=0)
+            self.book_title.grid(row=4, column=1, padx=10)
+            self.book_author.grid(row=4, column=2, padx=10)
+            self.book_quantity.grid(row=4, column=3)
+            self.book_price.grid(row=4, column=4)
+            self.info_displayed = True
+            
+
+            
+
+
+        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm)
+        self.confirm.grid(row=2, column=0, columnspan=5, pady=20)
+
+    
+
+    def search_title(self, page, page_switch=False):
+
+        for i in self.win.winfo_children():
+                i.destroy()
+
+        self.top_row = tk.Frame(self.win)
+        self.top_row.pack(anchor="center", pady=30)
+        self.main_frame = tk.Frame(self.win)
+        self.main_frame.pack(anchor="center", pady=20)
+        self.input_frame = tk.Frame(self.main_frame)
+        self.input_frame.grid(row=1, column=0, columnspan=5)
+
+        if page_switch:
+            self.pages = math.ceil(len(self.matching_books) / 12)
+            start, end = page * 12, page * 12 + 12 # Displaying 12 books per page
+            for book in itertools.islice(self.matching_books, start, end):
+                    self.book_isbn = tk.Label(self.main_frame, text=book, font=TABLE_FONT)
+                    self.book_title = tk.Label(self.main_frame, text=self.matching_books[book]["title"], font=TABLE_FONT)
+                    self.book_author = tk.Label(self.main_frame, text=self.matching_books[book]["author"], font=TABLE_FONT)
+                    self.book_quantity = tk.Label(self.main_frame, text=self.matching_books[book]["quantity"], font=TABLE_FONT)
+                    self.book_price = tk.Label(self.main_frame, text=self.matching_books[book]["price"], font=TABLE_FONT)
+
+                    self.book_isbn.grid(row=self.i, column=0)
+                    self.book_title.grid(row=self.i, column=1, padx=10)
+                    self.book_author.grid(row=self.i, column=2, padx=10)
+                    self.book_quantity.grid(row=self.i, column=3)
+                    self.book_price.grid(row=self.i, column=4)
+
+                    self.i += 1
+        else:
+            self.pages = 1
+
+        self.title = tk.Label(self.input_frame, text="Title or author", font=BUTTON_FONT)
+        self.title.grid(row=0, column=0, padx=10)
+        self.title_input = tk.Entry(self.input_frame, font=BUTTON_FONT)
+        self.title_input.grid(row=0, column=1, padx=10)
+        self.go_back = tk.Button(self.top_row, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2")
+        self.go_back.grid(row=0, column=0, padx=10)
+
+        # Page number and buttons for switching pages
+        self.page_number = tk.Label(self.top_row, text=f"Page {page + 1} of {self.pages}", font=TABLE_HEADER_FONT)
+        self.page_number.grid(row=0, column=1, padx=10)
+        self.switch_pages = tk.Frame(self.top_row)
+        self.switch_pages.grid(row=0, column=2, padx=10)
+        first_page = page == 0
+        last_page = page == self.pages - 1
+
+        self.previous_page = tk.Button(self.switch_pages, text="<", font=TABLE_HEADER_FONT, command=lambda: self.search_title(page - 1, True), cursor="hand2" if not first_page else "arrow", state="normal" if not first_page else "disabled")
+        self.previous_page.grid(row=0, column=0, padx=10)
+        self.next_page = tk.Button(self.switch_pages, text=">", font=TABLE_HEADER_FONT, command=lambda: self.search_title(page + 1, True), cursor="hand2" if not last_page else "arrow", state="normal" if not last_page else "disabled")
+        self.next_page.grid(row=0, column=1, padx=10)
+
+        self.i = 4
+
+        def confirm():
+            if self.title_input.get() == "":
+                messagebox.showerror("Error!", "Please enter the author's name or book title")
+                return
+
+            self.matching_books = {key: item for key, item in books.items() if (self.title_input.get() in books[key]["title"] or self.title_input.get() in books[key]["author"])}
+            print(self.matching_books)
+
+            if len(self.matching_books) == 0:
+                messagebox.showerror("Error!", "No books found")
+                return
+            
+            # Page number and buttons for switching pages
+            self.pages = math.ceil(len(self.matching_books) / 12)
+            self.page_number = tk.Label(self.top_row, text=f"Page {page + 1} of {self.pages}", font=TABLE_HEADER_FONT)
+            self.page_number.grid(row=0, column=1, padx=10)
+            self.switch_pages = tk.Frame(self.top_row)
+            self.switch_pages.grid(row=0, column=2, padx=10)
+            first_page = page == 0
+            last_page = page == self.pages - 1
+            self.previous_page = tk.Button(self.switch_pages, text="<", font=TABLE_HEADER_FONT, command=lambda: self.search_title(page - 1, True), cursor="hand2" if not first_page else "arrow", state="normal" if not first_page else "disabled")
+            self.previous_page.grid(row=0, column=0, padx=10)
+            self.next_page = tk.Button(self.switch_pages, text=">", font=TABLE_HEADER_FONT, command=lambda: self.search_title(page + 1, True), cursor="hand2" if not last_page else "arrow", state="normal" if not last_page else "disabled")
+            self.next_page.grid(row=0, column=1, padx=10)
+            
+
+            # Table header
+            self.isbn = tk.Label(self.main_frame, text="ISBN", font=TABLE_HEADER_FONT)
+            self.title = tk.Label(self.main_frame, text="Title", font=TABLE_HEADER_FONT)
+            self.author = tk.Label(self.main_frame, text="Author", font=TABLE_HEADER_FONT)
+            self.quantity = tk.Label(self.main_frame, text="Quantity in stock", font=TABLE_HEADER_FONT)
+            self.price = tk.Label(self.main_frame, text="Price", font=TABLE_HEADER_FONT)
+
+            self.isbn.grid(row=3, column=0, padx=10)
+            self.title.grid(row=3, column=1, padx=10)
+            self.author.grid(row=3, column=2, padx=10)
+            self.quantity.grid(row=3, column=3, padx=10)
+            self.price.grid(row=3, column=4, padx=10)
+
+            start, end = page * 12, page * 12 + 12 # Displaying 12 books per page
+            self.i = 4
+
+            for book in itertools.islice(self.matching_books, start, end):
+                    self.book_isbn = tk.Label(self.main_frame, text=book, font=TABLE_FONT)
+                    self.book_title = tk.Label(self.main_frame, text=self.matching_books[book]["title"], font=TABLE_FONT)
+                    self.book_author = tk.Label(self.main_frame, text=self.matching_books[book]["author"], font=TABLE_FONT)
+                    self.book_quantity = tk.Label(self.main_frame, text=self.matching_books[book]["quantity"], font=TABLE_FONT)
+                    self.book_price = tk.Label(self.main_frame, text=self.matching_books[book]["price"], font=TABLE_FONT)
+
+                    self.book_isbn.grid(row=self.i, column=0)
+                    self.book_title.grid(row=self.i, column=1, padx=10)
+                    self.book_author.grid(row=self.i, column=2, padx=10)
+                    self.book_quantity.grid(row=self.i, column=3)
+                    self.book_price.grid(row=self.i, column=4)
+
+                    self.i += 1
+
+            self.search_title(page=0, page_switch=True)
+        
+        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm)
+        self.confirm.grid(row=2, column=0, columnspan=5, pady=20)
+    
+
         
         
 
@@ -268,8 +456,10 @@ books = {
     "978037453355341": {"title": "The Adventures of Sherlock Holmes", "author": "Arthur Conan Doyle", "price": 12.99, "quantity": 20}
 }
 
+for i in range(50):
+    books[str(i)] = {"title": "lol", "author": "idk", "price": 2, "quantity": 4}
+
 
 win = tk.Tk()
 App(win)
 win.mainloop()
-
