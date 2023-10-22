@@ -60,11 +60,13 @@ class App:
         self.title.grid(row=0, column=0, pady=50)
 
         # Creating the main menu buttons
-        self.view_books_btn = tk.Button(self.main_frame, text="View all available books", font=BUTTON_FONT, command=lambda: self.view_books(0), cursor="hand2")
-        self.search_isbn_btn = tk.Button(self.main_frame, text="Search by ISBN", font=BUTTON_FONT, command=self.search_isbn, cursor="hand2")
-        self.search_title_btn = tk.Button(self.main_frame, text="Search by author or title", font=BUTTON_FONT, command=lambda: self.search_title(0), cursor="hand2")
-        self.add_book_btn = tk.Button(self.main_frame, text="Add a new book", font=BUTTON_FONT, command=self.add_book, cursor="hand2")
-        self.delete_book_btn = tk.Button(self.main_frame, text="Delete a book", font=BUTTON_FONT, command=self.delete_book, cursor="hand2")
+        self.menu_btn_width = 25
+        self.menu_btn_borderwidth = 5
+        self.view_books_btn = tk.Button(self.main_frame, text="View all available books", font=BUTTON_FONT, command=lambda: self.view_books(0), cursor="hand2", width=self.menu_btn_width, borderwidth=self.menu_btn_borderwidth)
+        self.search_isbn_btn = tk.Button(self.main_frame, text="Search by ISBN", font=BUTTON_FONT, command=self.search_isbn, cursor="hand2", width=self.menu_btn_width, borderwidth=self.menu_btn_borderwidth)
+        self.search_title_btn = tk.Button(self.main_frame, text="Search by author or title", font=BUTTON_FONT, command=lambda: self.search_title(0), cursor="hand2", width=self.menu_btn_width, borderwidth=self.menu_btn_borderwidth)
+        self.add_book_btn = tk.Button(self.main_frame, text="Add a new book", font=BUTTON_FONT, command=self.add_book, cursor="hand2", width=self.menu_btn_width, borderwidth=self.menu_btn_borderwidth)
+        self.delete_book_btn = tk.Button(self.main_frame, text="Delete a book", font=BUTTON_FONT, command=self.delete_book, cursor="hand2", width=self.menu_btn_width, borderwidth=self.menu_btn_borderwidth)
 
         self.view_books_btn.grid(row=1, column=0, pady=20)
         self.search_isbn_btn.grid(row=2, column=0, pady=10)
@@ -98,7 +100,7 @@ class App:
 
 
         # Page number and buttons for switching pages
-        self.go_back = tk.Button(self.top_row, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2")
+        self.go_back = tk.Button(self.top_row, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2", borderwidth=3)
         self.go_back.grid(row=0, column=0, padx=10)
         self.page_number = tk.Label(self.top_row, text=f"Page {page + 1} of {math.ceil(len(books) / 18)}", font=TABLE_HEADER_FONT)
         self.page_number.grid(row=0, column=1, padx=10)
@@ -109,9 +111,9 @@ class App:
         first_page = page == 0
         last_page = page == math.ceil(len(books) / 18) - 1
 
-        self.previous_page = tk.Button(self.switch_pages, text="<", font=TABLE_HEADER_FONT, command=lambda: self.view_books(page - 1), cursor="hand2" if not first_page else "arrow", state="normal" if not first_page else "disabled")
+        self.previous_page = tk.Button(self.switch_pages, text="<", font=TABLE_HEADER_FONT, command=lambda: self.view_books(page - 1), cursor="hand2" if not first_page else "arrow", state="normal" if not first_page else "disabled", borderwidth=3)
         self.previous_page.grid(row=0, column=0, padx=10)
-        self.next_page = tk.Button(self.switch_pages, text=">", font=TABLE_HEADER_FONT, command=lambda: self.view_books(page + 1), cursor="hand2" if not last_page else "arrow", state="normal" if not last_page else "disabled")
+        self.next_page = tk.Button(self.switch_pages, text=">", font=TABLE_HEADER_FONT, command=lambda: self.view_books(page + 1), cursor="hand2" if not last_page else "arrow", state="normal" if not last_page else "disabled", borderwidth=3)
         self.next_page.grid(row=0, column=1, padx=10)
 
         i = 2
@@ -141,7 +143,7 @@ class App:
         self.main_frame = tk.Frame(self.win)
         self.main_frame.pack(anchor="center", pady=20)
 
-        self.go_back = tk.Button(self.main_frame, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2")
+        self.go_back = tk.Button(self.main_frame, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2", borderwidth=3)
         self.go_back.grid(row=0, column=0, columnspan=2, pady=30)
 
         self.form_fields = {}
@@ -189,7 +191,7 @@ class App:
             messagebox.showinfo("Success", "Book added successfully!")
             self.add_book()
         
-        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm)
+        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm, borderwidth=3)
         self.confirm.grid(row=6, column=0, columnspan=2, pady=20)
 
 
@@ -200,7 +202,7 @@ class App:
         self.main_frame = tk.Frame(self.win)
         self.main_frame.pack(anchor="center", pady=20)
 
-        self.go_back = tk.Button(self.main_frame, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2")
+        self.go_back = tk.Button(self.main_frame, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2", borderwidth=3)
         self.go_back.grid(row=0, column=0, columnspan=2, pady=30)
 
         self.isbn = tk.Label(self.main_frame, text="ISBN", font=BUTTON_FONT)
@@ -221,7 +223,7 @@ class App:
             messagebox.showinfo("Success", "Book deleted successfully!")
             self.delete_book()
 
-        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm)
+        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm, borderwidth=3)
         self.confirm.grid(row=2, column=0, columnspan=2, pady=20)
 
 
@@ -235,7 +237,7 @@ class App:
         self.input_frame = tk.Frame(self.main_frame)
         self.input_frame.grid(row=1, column=0, columnspan=5)
 
-        self.go_back = tk.Button(self.main_frame, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2")
+        self.go_back = tk.Button(self.main_frame, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2", borderwidth=3)
         self.go_back.grid(row=0, column=0, columnspan=5, pady=30)
 
         self.isbn = tk.Label(self.input_frame, text="ISBN", font=BUTTON_FONT)
@@ -283,7 +285,7 @@ class App:
             self.book_price.grid(row=4, column=4)
             self.info_displayed = True
             
-        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm)
+        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm, borderwidth=3)
         self.confirm.grid(row=2, column=0, columnspan=5, pady=20)
 
 
@@ -340,7 +342,7 @@ class App:
         self.title.grid(row=0, column=0, padx=10)
         self.title_input = tk.Entry(self.input_frame, font=BUTTON_FONT)
         self.title_input.grid(row=0, column=1, padx=10)
-        self.go_back = tk.Button(self.top_row, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2")
+        self.go_back = tk.Button(self.top_row, text="Return to main menu", font=BUTTON_FONT, command=self.main_menu, cursor="hand2", borderwidth=3)
         self.go_back.grid(row=0, column=0, padx=10)
 
         # Page number and buttons for switching pages
@@ -351,9 +353,9 @@ class App:
         first_page = page == 0
         last_page = page == self.pages - 1
 
-        self.previous_page = tk.Button(self.switch_pages, text="<", font=TABLE_HEADER_FONT, command=lambda: self.search_title(page - 1, True), cursor="hand2" if not first_page else "arrow", state="normal" if not first_page else "disabled")
+        self.previous_page = tk.Button(self.switch_pages, text="<", font=TABLE_HEADER_FONT, command=lambda: self.search_title(page - 1, True), cursor="hand2" if not first_page else "arrow", state="normal" if not first_page else "disabled", borderwidth=3)
         self.previous_page.grid(row=0, column=0, padx=10)
-        self.next_page = tk.Button(self.switch_pages, text=">", font=TABLE_HEADER_FONT, command=lambda: self.search_title(page + 1, True), cursor="hand2" if not last_page else "arrow", state="normal" if not last_page else "disabled")
+        self.next_page = tk.Button(self.switch_pages, text=">", font=TABLE_HEADER_FONT, command=lambda: self.search_title(page + 1, True), cursor="hand2" if not last_page else "arrow", state="normal" if not last_page else "disabled", borderwidth=3)
         self.next_page.grid(row=0, column=1, padx=10)
 
         def confirm():
@@ -383,12 +385,10 @@ class App:
 
             self.search_title(page=0, searched=True)
         
-        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm)
+        self.confirm = tk.Button(self.main_frame, text="Confirm", font=BUTTON_FONT, command=confirm, borderwidth=3)
         self.confirm.grid(row=2, column=0, columnspan=5, pady=20)
     
 
-        
-        
 
 TITLE_FONT = ("Arial", 24)
 BUTTON_FONT = ("Arial", 20)
@@ -428,7 +428,6 @@ books = {
     "978006250217230": {"title": "The Count of Monte Cristo", "author": "Alexandre Dumas", "price": 10.49, "quantity": 19},
     "978014198079231": {"title": "The Picture of Dorian Gray", "author": "Oscar Wilde", "price": 9.99, "quantity": 20},
     "978030788743232": {"title": "The Iliad", "author": "Homer", "price": 11.49, "quantity": 15},
-    "978006447277233": {"title": "The Odyssey", "author": "Homer", "price": 9.49, "quantity": 23},
     "978038534994234": {"title": "A Tale of Two Cities", "author": "Charles Dickens", "price": 12.99, "quantity": 27},
     "978014311643235": {"title": "The Brothers Karamazov", "author": "Fyodor Dostoevsky", "price": 10.99, "quantity": 22},
     "978014044929236": {"title": "Les Misérables", "author": "Victor Hugo", "price": 13.49, "quantity": 16},
@@ -438,9 +437,6 @@ books = {
     "978006222781340": {"title": "Dracula", "author": "Bram Stoker", "price": 9.99, "quantity": 14},
     "978037453355341": {"title": "The Adventures of Sherlock Holmes", "author": "Arthur Conan Doyle", "price": 12.99, "quantity": 20}
 }
-
-for i in range(1, 50):
-    books[str(i)] = {"title": "lol", "author": "idk", "price": 2, "quantity": 4}
 
 
 win = tk.Tk()
